@@ -1,0 +1,6 @@
+flask
+flask-smorest
+python-dotenv
+connexion[swagger-ui]
+sqlalchemy
+flask-sqlalchemy
