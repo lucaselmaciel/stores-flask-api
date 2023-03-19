@@ -18,7 +18,9 @@ class Item(MethodView):
 
     def delete(self, item_id):
         item = ItemModel.query.get_or_404(item_id)
-        raise NotImplementedError("This method is not implemented.")
+        db.session.delete(item)
+        db.session.commit()
+        return {"message": "Item deleted."}
 
     @items_blueprint.arguments(ItemUpdateSchema)
     @items_blueprint.response(200, ItemSchema)
