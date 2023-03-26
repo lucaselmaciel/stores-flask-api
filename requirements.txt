@@ -4,3 +4,5 @@ python-dotenv
 connexion[swagger-ui]
 sqlalchemy
 flask-sqlalchemy
+flask-jwt-extended
+passlib

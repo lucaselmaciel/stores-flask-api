@@ -1,6 +1,7 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, pre_load
 from models.item import ItemModel
 from models.store import StoreModel
+from passlib.hash import pbkdf2_sha256
 
 
 class PlainItemSchema(Schema):
@@ -52,3 +53,14 @@ class TagAndItemSchema(Schema):
     message = fields.Str()
     item = fields.Nested(ItemSchema)
     tag = fields.Nested(TagSchema)
+
+
+class UserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    username = fields.String(required=True)
+    password = fields.String(required=True, load_only=True)
+
+    @pre_load
+    def hashed_password(self, data, **kwargs):
+        data['password'] = pbkdf2_sha256.hash(data.get('password'))
+        return data
