@@ -1,6 +1,9 @@
+from flask import abort
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy.exc import IntegrityError
+from flask_jwt_extended import create_access_token
+from passlib.hash import pbkdf2_sha256
 
 from db import db
 from models import UserModel
@@ -26,6 +29,23 @@ class UsersRegister(MethodView):
 
         return user
     
+
+@blp.route("/login")
+class UsersLogin(MethodView):
+    @blp.arguments(UserSchema)
+    def post(self, user_data):
+        user = UserModel.query.filter(
+            UserModel.username == user_data.get('username')
+        ).first()
+        print(user.password)
+        print(user_data.get('password'))
+
+        if user and pbkdf2_sha256.verify(user_data.get('password'), user.password):
+            access_token = create_access_token(identity=user.id)
+            return {"access_token": access_token}, 200
+
+        abort(401, "Invalid credentials")
+
 
 @blp.route("/user/<int:user_id>")
 class User(MethodView):

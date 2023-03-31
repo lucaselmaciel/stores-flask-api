@@ -3,6 +3,8 @@ from models.item import ItemModel
 from models.store import StoreModel
 from passlib.hash import pbkdf2_sha256
 
+from models.users import UserModel
+
 
 class PlainItemSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -62,5 +64,7 @@ class UserSchema(Schema):
 
     @pre_load
     def hashed_password(self, data, **kwargs):
-        data['password'] = pbkdf2_sha256.hash(data.get('password'))
+        if not UserModel.query.filter(UserModel.username == data.get('username')):
+            data['password'] = pbkdf2_sha256.hash(data.get('password'))
+            return data
         return data
