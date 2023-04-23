@@ -8,6 +8,7 @@ from schemas import TagSchema, TagAndItemSchema
 
 blue_print = Blueprint("Tags", "tags", description="Operations on tags")
 
+
 @blue_print.route('/store/<string:store_id>/tag')
 class TagsInStore(MethodView):
     @blue_print.response(200, TagSchema(many=True))

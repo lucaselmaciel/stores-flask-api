@@ -1,5 +1,4 @@
 import os
-import secrets
 
 from flask import Flask, jsonify
 from flask_smorest import Api
@@ -9,7 +8,6 @@ from resources.item import items_blueprint as ItemBlueprint
 from resources.store import store_blueprint as StoreBlueprint
 from resources.tags import blue_print as TagBlueprint
 from resources.user import blp as UserBlueprint
-import models
 from db import db
 
 
@@ -35,6 +33,13 @@ def create_app(db_url=None):
     api = Api(app)
 
     jwt = JWTManager(app)
+
+    # @jwt.additional_claims_loader
+    # def add_claims_to_jwt(identity):
+    #     user = UserModel.query.get_or_404(identity)
+    #     if user.is_admin:
+    #         return {"is_admin": True}
+    #     return {"is_admin": False}
 
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
@@ -65,4 +70,4 @@ def create_app(db_url=None):
     return app
 
 if __name__ == "__main__":
-    create_app()
+    app = create_app()

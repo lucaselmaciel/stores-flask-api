@@ -2,7 +2,7 @@ from flask import abort
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from passlib.hash import pbkdf2_sha256
 
 from db import db
@@ -37,8 +37,6 @@ class UsersLogin(MethodView):
         user = UserModel.query.filter(
             UserModel.username == user_data.get('username')
         ).first()
-        print(user.password)
-        print(user_data.get('password'))
 
         if user and pbkdf2_sha256.verify(user_data.get('password'), user.password):
             access_token = create_access_token(identity=user.id)
@@ -50,6 +48,7 @@ class UsersLogin(MethodView):
 @blp.route("/user/<int:user_id>")
 class User(MethodView):
 
+    @jwt_required()
     @blp.response(200, UserSchema)
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)

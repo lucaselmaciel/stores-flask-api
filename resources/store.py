@@ -8,6 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 store_blueprint = Blueprint("stores", __name__, description="Operations on stores")
 
+
 @store_blueprint.route("/store/<string:store_id>")
 class Store(MethodView):
     @store_blueprint.response(200, StoreSchema)
@@ -19,6 +20,7 @@ class Store(MethodView):
         db.session.delete(store)
         db.session.commit()
         return "Store deleted successfully"
+
 
 @store_blueprint.route("/store")
 class StoreList(MethodView):

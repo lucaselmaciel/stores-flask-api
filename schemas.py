@@ -61,10 +61,11 @@ class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.String(required=True)
     password = fields.String(required=True, load_only=True)
+    is_admin = fields.Boolean(required=False)
 
     @pre_load
     def hashed_password(self, data, **kwargs):
-        if not UserModel.query.filter(UserModel.username == data.get('username')):
+        if not UserModel.query.filter(UserModel.username == data.get('username')).first():
             data['password'] = pbkdf2_sha256.hash(data.get('password'))
             return data
         return data
