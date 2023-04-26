@@ -30,9 +30,6 @@ class UsersRegister(MethodView):
         return user
     
 
-    @blp.arguments(UserSchema)
-        
-
 @blp.route("/login")
 class UsersLogin(MethodView):
     @blp.arguments(UserSchema)
