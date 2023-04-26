@@ -37,7 +37,7 @@ class Item(MethodView):
             item.name = item_data["name"]
         else:
             item = ItemModel(**item_data)
-        
+
         db.session.add(item)
         db.session.commit()
 
@@ -55,7 +55,6 @@ class ItemList(MethodView):
     @items_blueprint.arguments(ItemSchema)
     @items_blueprint.response(201, ItemSchema)
     def post(self, item_data):
-        
         item = ItemModel(**item_data)
 
         try:

@@ -26,8 +26,10 @@ class Store(MethodView):
 class StoreList(MethodView):
     @store_blueprint.response(200, StoreSchema(many=True))
     def get(self):
-        return db.session.query(StoreModel, StoreModel.id, StoreModel.name, StoreModel.items).all()
-    
+        return db.session.query(
+            StoreModel, StoreModel.id, StoreModel.name, StoreModel.items
+        ).all()
+
     @store_blueprint.arguments(StoreSchema)
     @store_blueprint.response(201, StoreSchema)
     def post(self, store_data):
